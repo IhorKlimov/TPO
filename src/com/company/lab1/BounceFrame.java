@@ -47,7 +47,6 @@ public class BounceFrame extends JFrame {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        System.out.println("new paint");
         score.setText("Balls in holes: " + ballsInHoles);
     }
 }
