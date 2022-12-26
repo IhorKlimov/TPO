@@ -5,13 +5,14 @@ import java.awt.geom.Ellipse2D;
 import java.util.Random;
 
 class Ball {
-    private Component canvas;
+    private final Component canvas;
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
     private int x = 0;
     private int y = 0;
     private int dx = 2;
     private int dy = 2;
+    private boolean isRemoved;
 
     public Ball(Component c) {
         this.canvas = c;
@@ -30,20 +31,40 @@ class Ball {
     }
 
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.darkGray);
-        g2.fill(new Ellipse2D.Double(x, y, XSIZE, YSIZE));
+        if (!isRemoved) {
+            g2.setColor(Color.darkGray);
+            g2.fill(new Ellipse2D.Double(x, y, XSIZE, YSIZE));
+        }
     }
 
-    public void move() {
+    public boolean move() {
         x += dx;
         y += dy;
+
+        if (x <= XSIZE / 2 && y <= YSIZE / 2) { // Left-right corner
+            isRemoved = true;
+            this.canvas.repaint();
+            return true;
+        } else if (x <= XSIZE / 2 && y + YSIZE / 2 >= this.canvas.getHeight()) { // Left-bottom corner
+            isRemoved = true;
+            this.canvas.repaint();
+            return true;
+        } else if (x + XSIZE / 2 >= this.canvas.getWidth() && y <= YSIZE / 2) { // Right-top corner
+            isRemoved = true;
+            this.canvas.repaint();
+            return true;
+        } else if (x + XSIZE / 2 >= this.canvas.getWidth() && y + YSIZE / 2 >= this.canvas.getHeight()) { // Right-bottom corner
+            isRemoved = true;
+            this.canvas.repaint();
+            return true;
+        }
+
         if (x < 0) {
             x = 0;
             dx = -dx;
         }
         if (x + XSIZE >= this.canvas.getWidth()) {
             x = this.canvas.getWidth() - XSIZE;
-
             dx = -dx;
         }
         if (y < 0) {
@@ -55,5 +76,6 @@ class Ball {
             dy = -dy;
         }
         this.canvas.repaint();
+        return false;
     }
 }

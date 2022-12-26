@@ -5,10 +5,14 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class BallCanvas extends JPanel {
-    private ArrayList<Ball> balls = new ArrayList<>();
+    private final ArrayList<Ball> balls = new ArrayList<>();
 
     public void add(Ball b) {
         this.balls.add(b);
+    }
+
+    public void remove(Ball ball) {
+        balls.remove(ball);
     }
 
     @Override
