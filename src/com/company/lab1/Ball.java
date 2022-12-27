@@ -8,21 +8,28 @@ class Ball {
     private final Component canvas;
     private static final int XSIZE = 20;
     private static final int YSIZE = 20;
+    private final Color color;
     private int x = 0;
     private int y = 0;
     private int dx = 2;
     private int dy = 2;
     private boolean isRemoved;
 
-    public Ball(Component c) {
+    public Ball(Component c, Color color, int startX, int startY) {
         this.canvas = c;
+        this.color = color;
 
-        if (Math.random() < 0.5) {
-            x = new Random().nextInt(this.canvas.getWidth());
-            y = 0;
+        if (startX != -1 && startY != -1) {
+            this.x = startX;
+            this.y = startY;
         } else {
-            x = 0;
-            y = new Random().nextInt(this.canvas.getHeight());
+            if (Math.random() < 0.5) {
+                x = new Random().nextInt(this.canvas.getWidth());
+                y = 0;
+            } else {
+                x = 0;
+                y = new Random().nextInt(this.canvas.getHeight());
+            }
         }
     }
 
@@ -32,7 +39,7 @@ class Ball {
 
     public void draw(Graphics2D g2) {
         if (!isRemoved) {
-            g2.setColor(Color.darkGray);
+            g2.setColor(color);
             g2.fill(new Ellipse2D.Double(x, y, XSIZE, YSIZE));
         }
     }

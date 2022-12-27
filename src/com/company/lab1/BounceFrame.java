@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class BounceFrame extends JFrame {
     private final BallCanvas canvas;
@@ -22,10 +24,11 @@ public class BounceFrame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.lightGray);
         JButton buttonStart = new JButton("Start");
+        JButton buttonTask3 = new JButton("Task 3");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
-            Ball b = new Ball(canvas);
+            Ball b = new Ball(canvas, Color.black, -1, -1);
             canvas.add(b);
             BallThread thread = new BallThread(b, ball -> {
                 canvas.remove(ball);
@@ -36,9 +39,36 @@ public class BounceFrame extends JFrame {
             thread.start();
             System.out.println("Thread name = " + thread.getName());
         });
+        buttonTask3.addActionListener(e -> {
+            int startX = new Random().nextInt(this.canvas.getWidth());
+            int startY = 0;
+
+            ArrayList<BallThread> balls = new ArrayList<>();
+
+            int count = 1000;
+            for (int i = 0; i < count; i++) {
+                boolean isRed = i == count - 1;
+                Ball b = new Ball(canvas, isRed ? Color.red : Color.blue, startX, startY);
+                canvas.add(b);
+                BallThread thread = new BallThread(b, ball -> {
+                    canvas.remove(ball);
+                    ballsInHoles++;
+                    revalidate();
+                    repaint();
+                });
+                thread.setPriority(isRed ? Thread.MAX_PRIORITY : Thread.MIN_PRIORITY);
+                balls.add(thread);
+            }
+
+            balls.forEach(ballThread -> {
+                ballThread.start();
+                System.out.println("Thread name = " + ballThread.getName());
+            });
+        });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
+        buttonPanel.add(buttonTask3);
         buttonPanel.add(score);
         System.out.println("paint");
         content.add(buttonPanel, BorderLayout.SOUTH);
