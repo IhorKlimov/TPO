@@ -1,11 +1,7 @@
 package com.company.lab1;
 
-import sun.jvm.hotspot.debugger.ThreadAccess;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,6 +11,7 @@ public class BounceFrame extends JFrame {
     public static final int HEIGHT = 350;
     private final JTextArea score;
     private int ballsInHoles;
+    private Thread thread, thread2 = null;
 
     public BounceFrame() {
         this.setSize(WIDTH, HEIGHT);
@@ -29,6 +26,7 @@ public class BounceFrame extends JFrame {
         JButton buttonTask3 = new JButton("Task 3");
         JButton buttonTask4 = new JButton("Task 4");
         JButton buttonTask5 = new JButton("Task 5");
+        JButton buttonTask6 = new JButton("Task 6");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
@@ -111,14 +109,47 @@ public class BounceFrame extends JFrame {
                 }
             }).start();
         });
+        buttonTask6.addActionListener(e -> {
+            thread = new Thread(() -> {
+                for (int i = 0; i < 50; i++) {
+                    System.out.println("-");
+                    thread2.interrupt();
+                    try {
+                        Thread.sleep(10_000);
+                    } catch (InterruptedException ex) {
+                        // NOOP
+                    }
+                }
+            });
+
+            thread2 = new Thread(() -> {
+                try {
+                    Thread.sleep(10_000);
+                } catch (InterruptedException ex) {
+                    // NOOP
+                }
+                for (int i = 0; i < 50; i++) {
+                    System.out.println("|");
+                    thread.interrupt();
+                    try {
+                        Thread.sleep(10_000);
+                    } catch (InterruptedException ex) {
+                        // NOOP
+                    }
+                }
+            });
+
+            thread.start();
+            thread2.start();
+        });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
         buttonPanel.add(buttonTask3);
         buttonPanel.add(buttonTask4);
         buttonPanel.add(buttonTask5);
+        buttonPanel.add(buttonTask6);
         buttonPanel.add(score);
-        System.out.println("paint");
         content.add(buttonPanel, BorderLayout.SOUTH);
     }
 
