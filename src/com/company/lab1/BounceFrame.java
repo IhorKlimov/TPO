@@ -1,5 +1,7 @@
 package com.company.lab1;
 
+import sun.jvm.hotspot.debugger.ThreadAccess;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ public class BounceFrame extends JFrame {
         buttonPanel.setBackground(Color.lightGray);
         JButton buttonStart = new JButton("Start");
         JButton buttonTask3 = new JButton("Task 3");
+        JButton buttonTask4 = new JButton("Task 4");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
@@ -65,10 +68,41 @@ public class BounceFrame extends JFrame {
                 System.out.println("Thread name = " + ballThread.getName());
             });
         });
+        buttonTask4.addActionListener(e -> {
+            int startX = new Random().nextInt(this.canvas.getWidth());
+            int startY = 0;
+
+            int count = 100;
+            new Thread(() -> {
+                for (int i = 0; i < count; i++) {
+                    boolean isRed = i == 0;
+                    Ball b = new Ball(canvas, isRed ? Color.red : Color.blue, startX, startY);
+                    canvas.add(b);
+                    BallThread thread = new BallThread(b, ball -> {
+                        canvas.remove(ball);
+                        ballsInHoles++;
+                        revalidate();
+                        repaint();
+                    });
+                    thread.setPriority(isRed ? Thread.MAX_PRIORITY : Thread.MIN_PRIORITY);
+                    thread.start();
+                    if (isRed) {
+                        try {
+                            thread.join();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    System.out.println("Thread name = " + thread.getName());
+                }
+            }).start();
+        });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
         buttonPanel.add(buttonTask3);
+        buttonPanel.add(buttonTask4);
         buttonPanel.add(score);
         System.out.println("paint");
         content.add(buttonPanel, BorderLayout.SOUTH);
