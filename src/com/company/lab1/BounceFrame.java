@@ -28,6 +28,7 @@ public class BounceFrame extends JFrame {
         JButton buttonStart = new JButton("Start");
         JButton buttonTask3 = new JButton("Task 3");
         JButton buttonTask4 = new JButton("Task 4");
+        JButton buttonTask5 = new JButton("Task 5");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
@@ -98,11 +99,24 @@ public class BounceFrame extends JFrame {
                 }
             }).start();
         });
+        buttonTask5.addActionListener(e -> {
+            new Thread(() -> {
+                for (int i = 0; i < 100; i++) {
+                    System.out.println("-");
+                }
+            }).start();
+            new Thread(() -> {
+                for (int i = 0; i < 100; i++) {
+                    System.out.println("|");
+                }
+            }).start();
+        });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
         buttonPanel.add(buttonTask3);
         buttonPanel.add(buttonTask4);
+        buttonPanel.add(buttonTask5);
         buttonPanel.add(score);
         System.out.println("paint");
         content.add(buttonPanel, BorderLayout.SOUTH);
