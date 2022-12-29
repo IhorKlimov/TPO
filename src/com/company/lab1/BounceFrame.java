@@ -12,6 +12,7 @@ public class BounceFrame extends JFrame {
     private final JTextArea score;
     private int ballsInHoles;
     private Thread thread, thread2 = null;
+    private Counter count;
 
     public BounceFrame() {
         this.setSize(WIDTH, HEIGHT);
@@ -27,6 +28,7 @@ public class BounceFrame extends JFrame {
         JButton buttonTask4 = new JButton("Task 4");
         JButton buttonTask5 = new JButton("Task 5");
         JButton buttonTask6 = new JButton("Task 6");
+        JButton buttonTask7 = new JButton("Task 7");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
@@ -142,6 +144,33 @@ public class BounceFrame extends JFrame {
             thread.start();
             thread2.start();
         });
+        buttonTask7.addActionListener(e -> {
+            count = new Counter();
+
+            Thread thread1 = new Thread(() -> {
+                for (int i = 0; i < 100000; i++) {
+                    count.increment();
+                }
+                System.out.println("Done");
+            });
+
+            Thread thread2 = new Thread(() -> {
+                for (int i = 0; i < 100000; i++) {
+                    count.decrement();
+                }
+                System.out.println("Done");
+            });
+
+            thread1.start();
+            thread2.start();
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("Count is "+ count.getCount());
+        });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
         buttonPanel.add(buttonStop);
@@ -149,6 +178,7 @@ public class BounceFrame extends JFrame {
         buttonPanel.add(buttonTask4);
         buttonPanel.add(buttonTask5);
         buttonPanel.add(buttonTask6);
+        buttonPanel.add(buttonTask7);
         buttonPanel.add(score);
         content.add(buttonPanel, BorderLayout.SOUTH);
     }
