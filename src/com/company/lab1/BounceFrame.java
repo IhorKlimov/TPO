@@ -29,6 +29,7 @@ public class BounceFrame extends JFrame {
         JButton buttonTask5 = new JButton("Task 5");
         JButton buttonTask6 = new JButton("Task 6");
         JButton buttonTask7 = new JButton("Task 7");
+        JButton buttonTask8 = new JButton("Task 8");
         JButton buttonStop = new JButton("Stop");
         score = new JTextArea("Balls in holes: " + ballsInHoles);
         buttonStart.addActionListener(e -> {
@@ -169,7 +170,12 @@ public class BounceFrame extends JFrame {
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-            System.out.println("Count is "+ count.getCount());
+            System.out.println("Count is " + count.getCount());
+        });
+        buttonTask8.addActionListener(e -> {
+            task8First();
+            task8Second();
+            task8Third();
         });
         buttonStop.addActionListener(e -> System.exit(0));
         buttonPanel.add(buttonStart);
@@ -179,8 +185,97 @@ public class BounceFrame extends JFrame {
         buttonPanel.add(buttonTask5);
         buttonPanel.add(buttonTask6);
         buttonPanel.add(buttonTask7);
+        buttonPanel.add(buttonTask8);
         buttonPanel.add(score);
         content.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void task8First() {
+        count = new Counter();
+
+        Thread thread1 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                synchronized (count) {
+                    count.increment();
+                }
+            }
+            System.out.println("Done");
+        });
+
+        Thread thread2 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                synchronized (count) {
+                    count.decrement();
+                }
+            }
+            System.out.println("Done");
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Count is " + count.getCount());
+    }
+
+    private void task8Second() {
+        count = new Counter();
+
+        Thread thread1 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                count.update(true);
+            }
+            System.out.println("Done");
+        });
+
+        Thread thread2 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                count.update(false);
+            }
+            System.out.println("Done");
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Count is " + count.getCount());
+    }
+
+    private void task8Third() {
+        count = new Counter();
+
+        Thread thread1 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                count.incrementAtomic();
+            }
+            System.out.println("Done");
+        });
+
+        Thread thread2 = new Thread(() -> {
+            for (int i = 0; i < 100000; i++) {
+                count.decrementAtomic();
+            }
+            System.out.println("Done");
+        });
+
+        thread1.start();
+        thread2.start();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println("Count is " + count.getAtomicInteger().get());
     }
 
     @Override
