@@ -44,7 +44,7 @@ public class Lab3 {
             counts = wordCounter.countOccurrencesOnSingleThread(folder, searchedWord);
             stopTime = System.currentTimeMillis();
             averTime += stopTime - startTime;
-            System.out.println(counts + " average word length. Single thread search took " + averTime / repeatCount + "ms");
+            System.out.println(counts + " found words. Single thread search took " + averTime / repeatCount + "ms");
         }
     }
 }
