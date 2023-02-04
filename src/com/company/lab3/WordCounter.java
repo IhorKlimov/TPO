@@ -10,17 +10,15 @@ public class WordCounter {
     }
 
     Long occurrencesCount(Document document, String searchedWord) {
-        long length = 0;
         long wordCount = 0;
         for (String line : document.getLines()) {
             for (String word : wordsIn(line)) {
-//                if (searchedWord.equals(word)) {
-                length += word.length();
-                wordCount++;
-//                }
+                if (searchedWord.equals(word)) {
+                    wordCount++;
+                }
             }
         }
-        return length / wordCount;
+        return wordCount;
     }
 
     Long countOccurrencesInParallel(Folder folder, String searchedWord) {
