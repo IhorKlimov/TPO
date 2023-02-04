@@ -30,21 +30,26 @@ public class Lab3 {
         long startTime;
 
 
-        for (int i = 0; i < repeatCount; i++) {
-            startTime = System.currentTimeMillis();
-            counts = wordCounter.countOccurrencesInParallel(folder, searchedWord);
-            stopTime = System.currentTimeMillis();
-            averTime += stopTime - startTime;
-        }
-        System.out.println(counts + " found words. Fork / join search took " + averTime / repeatCount + "ms");
-        averTime = 0;
+//        for (int i = 0; i < repeatCount; i++) {
+//            startTime = System.currentTimeMillis();
+//            counts = wordCounter.countOccurrencesInParallel(folder, searchedWord);
+//            stopTime = System.currentTimeMillis();
+//            averTime += stopTime - startTime;
+//        }
+//        System.out.println(counts + " found words. Fork / join search took " + averTime / repeatCount + "ms");
+//        averTime = 0;
+//
+//        for (int i = 0; i < repeatCount; i++) {
+//            startTime = System.currentTimeMillis();
+//            counts = wordCounter.countOccurrencesOnSingleThread(folder, searchedWord);
+//            stopTime = System.currentTimeMillis();
+//            averTime += stopTime - startTime;
+//            System.out.println(counts + " found words. Single thread search took " + averTime / repeatCount + "ms");
+//        }
 
         for (int i = 0; i < repeatCount; i++) {
-            startTime = System.currentTimeMillis();
-            counts = wordCounter.countOccurrencesOnSingleThread(folder, searchedWord);
-            stopTime = System.currentTimeMillis();
-            averTime += stopTime - startTime;
-            System.out.println(counts + " found words. Single thread search took " + averTime / repeatCount + "ms");
+            Statistics statistics = wordCounter.getStatistics(folder);
+            System.out.println(statistics);
         }
     }
 }

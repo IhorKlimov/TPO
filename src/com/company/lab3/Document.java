@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-class Document {
+public class Document {
     private final List<String> lines;
 
     public Document(List<String> lines) {
         this.lines = lines;
     }
 
-    static Document fromFile(File file) throws IOException {
+    public static Document fromFile(File file) throws IOException {
         List<String> lines = new LinkedList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();

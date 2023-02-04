@@ -1,10 +1,14 @@
-package com.company.lab3;
+package com.company.lab3.search;
+
+import com.company.lab3.Document;
+import com.company.lab3.Folder;
+import com.company.lab3.WordCounter;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-class FolderSearchTask extends RecursiveTask<Long> {
+public class FolderSearchTask extends RecursiveTask<Long> {
     private final Folder folder;
     private final String searchedWord;
     private final WordCounter wordCounter;
