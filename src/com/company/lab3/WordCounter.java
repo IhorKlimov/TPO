@@ -72,6 +72,50 @@ public class WordCounter {
         return new Statistics(mathematicalExpectation, dispersion, meanSquareDeviation);
     }
 
+    public synchronized Statistics getStatisticsSynchronized(Document document) {
+        List<Integer> wordLengths = new ArrayList<>();
+        Map<Integer, Integer> occurrences = new HashMap<>();
+
+        for (String line : document.getLines()) {
+            for (String word : wordsIn(line)) {
+                int length = word.length();
+                wordLengths.add(length);
+                if (occurrences.containsKey(length)) {
+                    int count = occurrences.get(length);
+                    occurrences.put(length, count + 1);
+                } else {
+                    occurrences.put(length, 1);
+                }
+            }
+        }
+
+        // Математичне сподівання
+        double mathematicalExpectation = 0;
+        for (Map.Entry<Integer, Integer> entry : occurrences.entrySet()) {
+            double probability = entry.getValue() / ((double) wordLengths.size());
+            mathematicalExpectation += entry.getKey() * probability;
+        }
+
+        // Вібіркове середнє
+        int sum = 0;
+        for (Map.Entry<Integer, Integer> entry : occurrences.entrySet()) {
+            sum += entry.getKey() * entry.getValue();
+        }
+        double xb = sum / ((double) wordLengths.size());
+
+        // Дісперсія
+        double disTotal = 0d;
+        for (Map.Entry<Integer, Integer> entry : occurrences.entrySet()) {
+            disTotal += Math.pow((entry.getKey() - xb), 2) * entry.getValue();
+        }
+        double dispersion = disTotal / ((double) wordLengths.size());
+
+        // Середнє квадратичне відхилення
+        double meanSquareDeviation = Math.sqrt(dispersion);
+
+        return new Statistics(mathematicalExpectation, dispersion, meanSquareDeviation);
+    }
+
     Long countOccurrencesInParallel(Folder folder, String searchedWord) {
         return forkJoinPool.invoke(new FolderSearchTask(folder, searchedWord, this));
     }
