@@ -1,12 +1,10 @@
 package com.company.lab3;
 
+import com.company.lab3.keywords.FolderKeywordTask;
 import com.company.lab3.search.FolderSearchTask;
 import com.company.lab3.statistics.FolderStatisticsTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 public class WordCounter {
@@ -116,6 +114,10 @@ public class WordCounter {
         return new Statistics(mathematicalExpectation, dispersion, meanSquareDeviation);
     }
 
+    List<Document> findDocumentsByKeywords(Folder folder, List<String> keywords) {
+        return forkJoinPool.invoke(new FolderKeywordTask(folder, keywords, this));
+    }
+
     Long countOccurrencesInParallel(Folder folder, String searchedWord) {
         return forkJoinPool.invoke(new FolderSearchTask(folder, searchedWord, this));
     }
@@ -135,5 +137,18 @@ public class WordCounter {
         }
 
         return count;
+    }
+
+    public Boolean doesDocumentContainKeywords(Document document, List<String> keywords) {
+        for (String line : document.getLines()) {
+            String l = line.toLowerCase();
+            for (String keyword : keywords) {
+                if (l.contains(keyword.toLowerCase(Locale.ROOT))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -8,9 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Document {
+    private final String name;
     private final List<String> lines;
 
-    public Document(List<String> lines) {
+    public Document(String name, List<String> lines) {
+        this.name = name;
         this.lines = lines;
     }
 
@@ -23,10 +25,17 @@ public class Document {
                 line = reader.readLine();
             }
         }
-        return new Document(lines);
+        return new Document(file.getName(), lines);
     }
 
     public List<String> getLines() {
         return lines;
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }

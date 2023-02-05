@@ -17,6 +17,9 @@ package com.company.lab3;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Lab3 {
     private static long counts;
@@ -47,9 +50,33 @@ public class Lab3 {
 //            System.out.println(counts + " found words. Single thread search took " + averTime / repeatCount + "ms");
 //        }
 
+//        for (int i = 0; i < repeatCount; i++) {
+//            Statistics statistics = wordCounter.getStatistics(folder);
+//            System.out.println(statistics);
+//        }
+
+        ArrayList<String> keywords = new ArrayList<>();
+        keywords.add("алгоритм");
+        keywords.add("аналоговий");
+        keywords.add("додаток");
+        keywords.add("масив");
+        keywords.add("резервне копіювання");
+        keywords.add("пропускна здатність");
+        keywords.add("широкосмуговий доступ");
+        keywords.add("браузер");
+        keywords.add("даних");
+        keywords.add("Доменне ім'я");
+        keywords.add("зашифрувати");
+        keywords.add("папка");
+        keywords.add("html");
+        keywords.add("Інтернет");
+        keywords.add("посилання");
+
         for (int i = 0; i < repeatCount; i++) {
-            Statistics statistics = wordCounter.getStatistics(folder);
-            System.out.println(statistics);
+            List<Document> documents = wordCounter.findDocumentsByKeywords(folder, keywords);
+            for (Document document : documents) {
+                System.out.println(document);
+            }
         }
     }
 }
