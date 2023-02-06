@@ -13,14 +13,8 @@
 #define FROM_WORKER 2 /* setting a message type */
 
 int main(int argc, char *argv[]) {
-    int numtasks,
-            taskid,
-            numworkers,
-            source,
-            dest,
-            rows,        /* rows of matrix A sent to each worker */
-    averow, extra, offset,
-            i, j, k, rc;
+    int numtasks, taskid, numworkers, source, dest, rows,        /* rows of matrix A sent to each worker */
+    averow, extra, offset, i, j, k, rc;
     double a[NRA][NCA], /* matrix A to be multiplied */
     b[NCA][NCB], /* matrix B to be multiplied */
     c[NRA][NCB]; /* result matrix C */
@@ -58,17 +52,14 @@ int main(int argc, char *argv[]) {
                      MPI_COMM_WORLD);
             offset = offset + rows;
         }
-/* Receive results from worker tasks */
+        /* Receive results from worker tasks */
         for (source = 1; source <= numworkers; source++) {
-            MPI_Recv(&offset, 1, MPI_INT, source, FROM_WORKER,
-                     MPI_COMM_WORLD, &status);
-            MPI_Recv(&rows, 1, MPI_INT, source, FROM_WORKER,
-                     MPI_COMM_WORLD, &status);
-            MPI_Recv(&c[offset][0], rows * NCB, MPI_DOUBLE, source,
-                     FROM_WORKER, MPI_COMM_WORLD, &status);
+            MPI_Recv(&offset, 1, MPI_INT, source, FROM_WORKER,MPI_COMM_WORLD, &status);
+            MPI_Recv(&rows, 1, MPI_INT, source, FROM_WORKER,MPI_COMM_WORLD, &status);
+            MPI_Recv(&c[offset][0], rows * NCB, MPI_DOUBLE, source,FROM_WORKER, MPI_COMM_WORLD, &status);
             printf("Received results from task %d\n", source);
         }
-/* Print results */
+        /* Print results */
         printf("****\n");
         printf("Result Matrix:\n");
         for (i = 0; i < NRA; i++) {
@@ -79,15 +70,12 @@ int main(int argc, char *argv[]) {
         printf("\n********\n");
         printf("Done.\n");
     }
-/******** worker task *****************/
+        /******** worker task *****************/
     else { /* if (taskid > MASTER) */
-        MPI_Recv(&offset, 1, MPI_INT, MASTER, FROM_MASTER, MPI_COMM_WORLD,
-                 &status);
+        MPI_Recv(&offset, 1, MPI_INT, MASTER, FROM_MASTER, MPI_COMM_WORLD, &status);
         MPI_Recv(&rows, 1, MPI_INT, MASTER, FROM_MASTER, MPI_COMM_WORLD, &status);
-        MPI_Recv(&a, rows * NCA, MPI_DOUBLE, MASTER, FROM_MASTER, MPI_COMM_WORLD,
-                 &status);
-        MPI_Recv(&b, NCA * NCB, MPI_DOUBLE, MASTER, FROM_MASTER, MPI_COMM_WORLD,
-                 &status);
+        MPI_Recv(&a, rows * NCA, MPI_DOUBLE, MASTER, FROM_MASTER, MPI_COMM_WORLD, &status);
+        MPI_Recv(&b, NCA * NCB, MPI_DOUBLE, MASTER, FROM_MASTER, MPI_COMM_WORLD, &status);
         for (k = 0; k < NCB; k++)
             for (i = 0; i < rows; i++) {
                 c[i][k] = 0.0;
@@ -106,6 +94,7 @@ int main(int argc, char *argv[]) {
 
 // Ознайомитись з методами блокуючого та неблокуючого  обміну повідомленнями типу point-to-point
 // (див. лекцію та документацію стандарту MPI).
+
 // Реалізувати алгоритм паралельного множення матриць з використанням розподілених обчислень в MPI з
 // використанням методів блокуючого обміну повідомленнями (лістинг 1). 30 балів.
 

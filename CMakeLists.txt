@@ -7,4 +7,4 @@ include_directories(src/com/company/lab4)
 
 add_executable(Labs
         src/com/company/lab4/Lab3.cpp
-        src/com/company/lab4/Lab3.h)
+        src/com/company/lab4/Lab3.h src/com/company/lab4/MatrixNonBlocking.cpp src/com/company/lab4/MatrixNonBlocking.cpp)
