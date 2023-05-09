@@ -31,6 +31,7 @@ public class Lab3 {
         WordCounter wordCounter = new WordCounter();
 
         List<String> commonWords = wordCounter.getCommonWords(folder);
+        System.out.println("Found " + commonWords.size() + " common words");
         System.out.println("Common words: " + String.join(", ", commonWords));
 
 
