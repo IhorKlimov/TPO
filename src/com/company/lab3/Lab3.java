@@ -26,37 +26,41 @@ import java.util.Collections;
 import java.util.List;
 
 public class Lab3 {
+    private static int repeatCount = 1;
+
     public static void main(String[] args) throws IOException {
-        Folder folder = Folder.fromDirectory(new File("common_files"));
+        Folder folder = Folder.fromDirectory(new File("files"));
         WordCounter wordCounter = new WordCounter();
 
-        List<String> commonWords = wordCounter.getCommonWords(folder);
-        System.out.println("Found " + commonWords.size() + " common words");
-        System.out.println("Common words: " + String.join(", ", commonWords));
+//        List<String> commonWords = wordCounter.getCommonWords(folder);
+//        System.out.println("Found " + commonWords.size() + " common words");
+//        System.out.println("Common words: " + String.join(", ", commonWords));
 
 
-//        ArrayList<String> keywords = new ArrayList<>();
-//        keywords.add("алгоритм");
-//        keywords.add("аналоговий");
-//        keywords.add("додаток");
-//        keywords.add("масив");
-//        keywords.add("резервне копіювання");
-//        keywords.add("пропускна здатність");
-//        keywords.add("широкосмуговий доступ");
-//        keywords.add("браузер");
-//        keywords.add("даних");
-//        keywords.add("Доменне ім'я");
-//        keywords.add("зашифрувати");
-//        keywords.add("папка");
-//        keywords.add("html");
-//        keywords.add("Інтернет");
-//        keywords.add("посилання");
-//
-//        for (int i = 0; i < repeatCount; i++) {
-//            List<Document> documents = wordCounter.findDocumentsByKeywords(folder, keywords);
-//            for (Document document : documents) {
-//                System.out.println(document);
-//            }
-//        }
+        ArrayList<String> keywords = new ArrayList<>();
+        keywords.add("алгоритм");
+        keywords.add("аналоговий");
+        keywords.add("додаток");
+        keywords.add("масив");
+        keywords.add("резервне копіювання");
+        keywords.add("пропускна здатність");
+        keywords.add("широкосмуговий доступ");
+        keywords.add("браузер");
+        keywords.add("даних");
+        keywords.add("Доменне ім'я");
+        keywords.add("зашифрувати");
+        keywords.add("папка");
+        keywords.add("html");
+        keywords.add("Інтернет");
+        keywords.add("посилання");
+
+        for (int i = 0; i < repeatCount; i++) {
+            List<Document> documents = wordCounter.findDocumentsByKeywords(folder, keywords);
+            ArrayList<String> names = new ArrayList<>();
+            for (Document document : documents) {
+                names.add(document.getName());
+            }
+            System.out.println("Found documents containing needed keywords: " + String.join(", ", names));
+        }
     }
 }

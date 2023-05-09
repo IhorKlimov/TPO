@@ -32,6 +32,10 @@ public class Document {
         return lines;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "Document{" +
