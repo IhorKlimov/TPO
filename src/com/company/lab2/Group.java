@@ -19,6 +19,7 @@ public class Group {
         if (!grades.containsKey(studentName)) {
             grades.put(studentName, new ArrayList<>());
         }
+        System.out.println("Додаю оцінку "+ studentName + " "+ grade + " "+ groupName);
         grades.get(studentName).add(grade);
     }
 
