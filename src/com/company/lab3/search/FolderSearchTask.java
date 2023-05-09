@@ -4,34 +4,63 @@ import com.company.lab3.Document;
 import com.company.lab3.Folder;
 import com.company.lab3.WordCounter;
 
+import java.sql.Array;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-public class FolderSearchTask extends RecursiveTask<Long> {
+import static com.company.lab3.WordCounter.wordsIn;
+
+public class FolderSearchTask extends RecursiveTask<List<String>> {
     private final Folder folder;
-    private final String searchedWord;
     private final WordCounter wordCounter;
 
 
-    public FolderSearchTask(Folder folder, String searchedWord, WordCounter wordCounter) {
+    public FolderSearchTask(Folder folder, WordCounter wordCounter) {
         this.folder = folder;
-        this.searchedWord = searchedWord;
         this.wordCounter = wordCounter;
     }
 
     @Override
-    protected Long compute() {
-        long count = 0L;
-        List<RecursiveTask<Long>> tasks = new LinkedList<>();
-        for (Document document : folder.getDocuments()) {
-            DocumentSearchTask task = new DocumentSearchTask(document, searchedWord, wordCounter);
-            tasks.add(task);
-            task.fork();
+    protected List<String> compute() {
+        ArrayList<String> commonWords = new ArrayList<>();
+
+        Document firstDocument = null;
+        ArrayList<Document> otherDocuments = new ArrayList<>();
+
+        if (folder.getDocuments().size() < 2) {
+            return commonWords;
         }
-        for (RecursiveTask<Long> task : tasks) {
-            count = count + task.join();
+
+        for (int i = 0; i < folder.getDocuments().size(); i++) {
+            Document doc = folder.getDocuments().get(i);
+            if (i == 0) {
+                firstDocument = doc;
+            } else {
+                otherDocuments.add(doc);
+            }
         }
-        return count;
+
+        for (String line : firstDocument.getLines()) {
+            for (String word : wordsIn(line)) {
+                List<DocumentSearchTask> tasks = new LinkedList<>();
+
+                for (Document document : otherDocuments) {
+                    DocumentSearchTask task = new DocumentSearchTask(document, word, wordCounter);
+                    tasks.add(task);
+                    task.fork();
+                }
+                for (DocumentSearchTask task : tasks) {
+                    if (task.join()) {
+                        if (!commonWords.contains(task.getSearchedWord())) {
+                            commonWords.add(task.getSearchedWord());
+                        }
+                    }
+                }
+            }
+        }
+
+        return commonWords;
     }
 }

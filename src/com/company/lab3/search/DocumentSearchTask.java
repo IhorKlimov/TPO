@@ -5,7 +5,7 @@ import com.company.lab3.WordCounter;
 
 import java.util.concurrent.RecursiveTask;
 
-public class DocumentSearchTask extends RecursiveTask<Long> {
+public class DocumentSearchTask extends RecursiveTask<Boolean> {
     private final Document document;
     private final String searchedWord;
     private final WordCounter wordCounter;
@@ -16,10 +16,13 @@ public class DocumentSearchTask extends RecursiveTask<Long> {
         this.wordCounter = wordCounter;
     }
 
+    public String getSearchedWord() {
+        return searchedWord;
+    }
 
     @Override
-    protected Long compute() {
-        return wordCounter.occurrencesCount(document, searchedWord);
+    protected Boolean compute() {
+        return wordCounter.containsWord(document, searchedWord);
     }
 
 }

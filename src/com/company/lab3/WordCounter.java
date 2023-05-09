@@ -10,7 +10,7 @@ import java.util.concurrent.ForkJoinPool;
 public class WordCounter {
     private final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
-    public String[] wordsIn(String line) {
+    public static String[] wordsIn(String line) {
         return line.trim().split("(\\s|\\p{Punct})+");
     }
 
@@ -24,6 +24,17 @@ public class WordCounter {
             }
         }
         return wordCount;
+    }
+
+    public boolean containsWord(Document document, String searchedWord) {
+        for (String line : document.getLines()) {
+            for (String word : wordsIn(line)) {
+                if (searchedWord.equals(word)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Statistics getStatistics(Document document) {
@@ -118,8 +129,8 @@ public class WordCounter {
         return forkJoinPool.invoke(new FolderKeywordTask(folder, keywords, this));
     }
 
-    Long countOccurrencesInParallel(Folder folder, String searchedWord) {
-        return forkJoinPool.invoke(new FolderSearchTask(folder, searchedWord, this));
+    List<String> getCommonWords(Folder folder) {
+        return forkJoinPool.invoke(new FolderSearchTask(folder, this));
     }
 
     Statistics getStatistics(Folder folder) {
