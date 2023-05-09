@@ -4,27 +4,26 @@ import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
 public class Producer implements Runnable {
-    private BlockingQueue<String> drop;
+    private BlockingQueue<Integer> drop;
 
-    public Producer(BlockingQueue<String> drop) {
+    public Producer(BlockingQueue<Integer> drop) {
         this.drop = drop;
     }
 
     public void run() {
-        String importantInfo[] = {
-                "Mares eat oats",
-                "Does eat oats",
-                "Little lambs eat ivy",
-                "A kid will eat ivy too"
-        };
+        int importantInfo[] = new int[1000];
         Random random = new Random();
+
+        for (int i = 0; i < importantInfo.length; i++) {
+            importantInfo[i] = random.nextInt(50_000);
+        }
 
         try {
             for (int i = 0; i < importantInfo.length; i++) {
                 drop.put(importantInfo[i]);
                 Thread.sleep(random.nextInt(5000));
             }
-            drop.put("DONE");
+            drop.put(-1);
         } catch (InterruptedException e) {
             // NOOP
         }
