@@ -2,13 +2,17 @@ package com.company.lab3.task3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 
 public class Main {
     private static List<Group> groups = new ArrayList<>();
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
     public static void main(String[] args) {
         ArrayList<String> classes = new ArrayList<>();
-        classes.add("Технології паралельних обчислень");
+        String className = "Технології паралельних обчислень";
+        classes.add(className);
 
         ArrayList<Student> studentsOne = new ArrayList<>();
         studentsOne.add(new Student("Yamanu Eszti", "ІТз-01"));
@@ -47,23 +51,17 @@ public class Main {
         groups.add(new Group("ІПз-01", studentsTwo, classes));
         groups.add(new Group("ІАз-01", studentsThree, classes));
 
-        Teacher teacher = new Teacher("Jeannine Leilani");
-        Assistant assistantOne = new Assistant("Marinda Daniil");
-        Assistant assistantTwo = new Assistant("Terrie Patton");
-        Assistant assistantThree = new Assistant("Gonzalo Wilson");
-
-
         while (true) {
-            for (Group group : groups) {
-                int numOfStudents = group.getStudents().size();
-                int oneTask = numOfStudents / 4;
-                int remainder = numOfStudents % 4;
+            long start = System.currentTimeMillis();
 
-                teacher.addGrades(group, "Технології паралельних обчислень", 0, oneTask);
-                assistantOne.addGrades(group, "Технології паралельних обчислень", oneTask, oneTask * 2);
-                assistantTwo.addGrades(group, "Технології паралельних обчислень", oneTask * 2, oneTask * 3);
-                assistantThree.addGrades(group, "Технології паралельних обчислень", oneTask * 3, oneTask * 3 + remainder);
+            for (Group group : groups) {
+                Map<Student, Integer> grades = forkJoinPool.invoke(new GradingTask(group, className));
+                for (Map.Entry<Student, Integer> entry : grades.entrySet()) {
+                    group.addGrade(className, entry.getKey(), entry.getValue());
+                }
             }
+
+            System.out.println("Task took " + (System.currentTimeMillis() - start));
 
             try {
                 Thread.sleep(7 * 24 * 60 * 60 * 1000);
