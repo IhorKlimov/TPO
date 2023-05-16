@@ -1,11 +1,11 @@
 package com.company.lab2.task3;
 
-import java.util.List;
 import java.util.Random;
 
 public class Teacher {
     private final String name;
     private static final Random random = new Random();
+    private Thread thread;
 
     public Teacher(String name) {
         this.name = name;
@@ -16,10 +16,19 @@ public class Teacher {
     }
 
     public void addGrades(Group group, String className, int from, int to) {
-        new Thread(() -> {
+        thread = new Thread(() -> {
             for (Student student : group.getStudents().subList(from, to)) {
                 group.addGrade(className, student, random.nextInt(101));
             }
-        }).start();
+        });
+        thread.start();
+    }
+
+    public void join() {
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

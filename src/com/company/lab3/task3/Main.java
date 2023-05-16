@@ -1,8 +1,7 @@
-package com.company.lab2.task3;
+package com.company.lab3.task3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
     private static List<Group> groups = new ArrayList<>();
@@ -53,9 +52,8 @@ public class Main {
         Assistant assistantTwo = new Assistant("Terrie Patton");
         Assistant assistantThree = new Assistant("Gonzalo Wilson");
 
-        while (true) {
-            long start = System.currentTimeMillis();
 
+        while (true) {
             for (Group group : groups) {
                 int numOfStudents = group.getStudents().size();
                 int oneTask = numOfStudents / 4;
@@ -65,14 +63,7 @@ public class Main {
                 assistantOne.addGrades(group, "Технології паралельних обчислень", oneTask, oneTask * 2);
                 assistantTwo.addGrades(group, "Технології паралельних обчислень", oneTask * 2, oneTask * 3);
                 assistantThree.addGrades(group, "Технології паралельних обчислень", oneTask * 3, oneTask * 3 + remainder);
-
-                teacher.join();
-                assistantOne.join();
-                assistantTwo.join();
-                assistantThree.join();
             }
-
-            System.out.println("Task took " + (System.currentTimeMillis() - start));
 
             try {
                 Thread.sleep(7 * 24 * 60 * 60 * 1000);
