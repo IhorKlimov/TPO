@@ -63,4 +63,5 @@ public class Lab3 {
             System.out.println("Found documents containing needed keywords: " + String.join(", ", names));
         }
     }
+
 }
